@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.applicationtesting_wewillapp.adapter.AdapterData
+import com.example.applicationtesting_wewillapp.model.ResponseData
+import com.example.applicationtesting_wewillapp.presenter.PresenterData
+import com.example.applicationtesting_wewillapp.retrofit.Utils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
@@ -13,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
     var mPresenterData = PresenterData()
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -21,16 +24,15 @@ class MainActivity : AppCompatActivity() {
     private  var lon :Double? = null
     var exclude = "daily"
     var units = "metric"
-    lateinit var mAdapterData:AdapterData
+    lateinit var mAdapterData: AdapterData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setLatLon()
-
     }
-
     private fun setLatLon() {
         if (ActivityCompat.checkSelfPermission(this,
                         android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun setAPI(lat: Double, lon: Double) {
         mPresenterData.OpenDataPresenterRX(
                 lat, lon,exclude,units,
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         mAdapterData = AdapterData(this,responseData.hourly)
         recycler_hourly.apply {
-            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
             adapter = mAdapterData
             mAdapterData.notifyDataSetChanged()
         }
